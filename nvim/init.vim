@@ -1,6 +1,6 @@
 let mapleader = " "
 
-set tabstop=2 softtabstop=0 expandtab shiftwidth=2 smarttab
+set tabstop=2 softtabstop=0 expandtab shiftwidth=2 smarttab nowrap
 
 call plug#begin('~/.nvim/plugged')
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
@@ -19,6 +19,13 @@ Plug 'tpope/vim-fugitive' "requirement from benwainwright/fzf-project
 Plug 'benwainwright/fzf-project'
 Plug 'ygm2/rooter.nvim'
 Plug 'ojroques/nvim-buildme'
+Plug 'fedepujol/move.nvim'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'TimUntersberger/neogit'
+Plug 'sakhnik/nvim-gdb', { 'do': ':!./install.sh' }
+Plug 'tikhomirov/vim-glsl'
+Plug 'tpope/vim-dispatch'
+" Plug 'lukas-reineke/indent-blankline.nvim'
 call plug#end()
 
 " let g:airline_theme='nord'
@@ -195,11 +202,8 @@ nnoremap <silent> <space>p  :<C-u>CocListResume<CR>.
 let g:coc_disable_startup_warning = 1
 
 
-" Empty value to disable preview window altogether
-let g:fzf_preview_window = ''
-
 " Always enable preview window on the right with 60% width
-let g:fzf_preview_window = 'right:60%'
+let g:fzf_preview_window = ['up:40%:hidden', 'ctrl-/']
 
 " [Buffers] Jump to the existing window if possible
 let g:fzf_buffers_jump = 1
@@ -233,7 +237,7 @@ let g:coc_snippet_next = '<c-j>'
 let g:coc_snippet_prev = '<c-k>'
 
 " Use <C-j> for both expand and jump (make expand higher priority.)
-imap <C-j> <Plug>(coc-snippets-expand-jump)
+"imap <C-j> <Plug>(coc-snippets-expand-jump)
 
 " Empty value to disable preview window altogether
 let g:fzf_preview_window = ''
@@ -253,7 +257,7 @@ let g:fzf_tags_command = 'ctags -R'
 " [Commands] --expect expression for directly executing the command
 let g:fzf_commands_expect = 'alt-enter,ctrl-x'
 
-set autochdir
+"set autochdir
 
 set guicursor=
 set nohlsearch
@@ -264,7 +268,6 @@ set noswapfile
 set nobackup
 set undodir=~/.vim/undodir
 set undofile
-set nowrap
 
 " This is the default option:
 "   - Preview window on the right with 50% width
@@ -295,6 +298,7 @@ let g:fzf_commands_expect = 'alt-enter,ctrl-x'
 nnoremap <SPACE> <Nop>
 let mapleader=" "
 
+" nnoremap <silent> <C-j> <Plug>(coc-snippets-expand-jump)
 nnoremap <silent> <Leader>b :Buffers<CR>
 nnoremap <silent> <Leader>f :Files<CR>
 nnoremap <silent> <Leader>s :Rg<CR>
@@ -307,7 +311,7 @@ nnoremap <silent> <Leader>h: :History:<CR>
 nnoremap <silent> <Leader>h/ :History/<CR>
 nnoremap <silent> <Leader>pp :FzfSwitchProject<CR>
 nnoremap <silent> <Leader>pf :FzfChooseProjectFile<CR>
-nnoremap <silent> <M-m> :BuildMe<CR>
+nnoremap <silent> <M-m> :Make<CR>
 nnoremap <silent> <M-2> :split<CR>
 nnoremap <silent> <M-3> :vsplit<CR>
 nnoremap <silent> <M-w> :wincmd k<CR>
@@ -315,6 +319,14 @@ nnoremap <silent> <M-a> :wincmd h<CR>
 nnoremap <silent> <M-s> :wincmd j<CR>
 nnoremap <silent> <M-d> :wincmd l<CR>
 nnoremap <silent> <M-0> :wincmd q<CR>
+nnoremap <silent> <M-j> :MoveLine(1)<CR>
+nnoremap <silent> <M-k> :MoveLine(-1)<CR>
+vnoremap <silent> <M-j> :MoveBlock(1)<CR>
+vnoremap <silent> <M-k> :MoveBlock(-1)<CR>
+nnoremap <silent> <M-l> :MoveHChar(1)<CR>
+nnoremap <silent> <M-h> :MoveHChar(-1)<CR>
+vnoremap <silent> <M-l> :MoveHBlock(1)<CR>
+vnoremap <silent> <M-h> :MoveHBlock(-1)<CR>
 " nnoremap <silent> <Leader>m :make<CR>
 
 " Reloading source on CTRL-P. Requires fd command.
@@ -337,6 +349,7 @@ let g:rooter_patterns = ['.git', 'CMakeLists.txt', '*.sln', 'build/env.sh', '.bu
 "highlight Normal guibg=#ffffff
 highlight Normal guibg=none
 highlight NormalNC guibg=none
-highlight StatusLine guibg=none
-highlight StatusLineNC guibg=none
+highlight StatusLine guibg=#222222
+highlight StatusLineNC guibg=#111111
+highlight VertSplit guifg=#555555
 nnoremap <silent> <Leader>c :highlight Normal guibg=none<CR>
